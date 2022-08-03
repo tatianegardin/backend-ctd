@@ -20,13 +20,13 @@ public abstract class Vendedor {
     da subclasse e valida cada item para retornar a categoria*/
     public String mostrarCategoria(){
         if(calcularPontos() < 20 ){
-            return "Novato";
+            return "Estagiário " + this.nome + " tem um total de " + calcularPontos() + " e categoriza como novato";
         } else if (calcularPontos() < 31){
-            return "Aprendiz";
+            return"Estagiário " + this.nome + " tem um total de " + calcularPontos() + " e categoriza como aprendiz";
         } else if (calcularPontos() < 41){
-            return "Bom";
+            return "Estagiário " + this.nome + " tem um total de " + calcularPontos() + " e categoriza como bom";
         } else {
-            return "Mestre";
+            return "Estagiário " + this.nome + " tem um total de " + calcularPontos() + " e categoriza como mestre";
         }
     }
 }
