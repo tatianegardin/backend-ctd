@@ -22,7 +22,7 @@ public class Main {
     private static final String deleteByEmail =  "DELETE FROM Usuario WHERE Email='mariajose@email.com'";
     private static final String updateById =  "UPDATE Usuario SET Email = 'mariajose@email.com' WHERE ID=2";
 
-    private static final String findById = "SELECT EMAIL FROM Usuario WHERE ID=1";
+    private static final String findById = "SELECT * FROM USUARIO WHERE ID=2";
 
     public static void main(String[] args) throws Exception {
         Connection connection = null;
@@ -49,10 +49,15 @@ public class Main {
             statement.executeUpdate(updateById);
             ResultSet busca = statement.executeQuery(findById);
 
-            //TODO verificar pq não está dando para buscar o valor do dado, consigo só retornar a referência do ResultSet
-            //String busca = statement.executeQuery(findById).getString(1).toString();
+            while (busca.next()){
+                logger.info( "\nId: " + busca.getInt(1)
+                        + "\n Nome: " + busca.getString(2)
+                        + "\n Sobrenome: " + busca.getString(3)
+                        + "\n Email: " + busca.getString(4)
+                        +"\n Idade: " +  busca.getInt(5));
+            }
 
-            logger.debug("Usuário 2 atualizado" +  busca);
+            logger.debug("Usuário 2 atualizado" +  busca );
 
             statement.executeUpdate(deleteById);
             logger.info("Usuário deletado pelo id");
