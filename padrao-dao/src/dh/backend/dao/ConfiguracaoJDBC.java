@@ -1,0 +1,30 @@
+package dh.backend.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class ConfiguracaoJDBC {
+    private String jdbcDrive;
+    private String dbURL;
+    private String nomeUsuario;
+    private String senha;
+
+    public ConfiguracaoJDBC() {
+        this.jdbcDrive = "org.h2.Driver";
+        this.dbURL = "jdbc:h2:~/test;INIT=RUNSCRIPT FROM 'data.sql'";
+        this.nomeUsuario="root";
+        this.senha = "";
+    }
+
+    public Connection conectarComBanco(){
+        Connection connection = null;
+        try{
+            connection = DriverManager.getConnection(dbURL,nomeUsuario,senha);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return connection;
+    }
+}
