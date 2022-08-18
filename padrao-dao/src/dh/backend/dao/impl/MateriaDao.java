@@ -16,6 +16,7 @@ public class MateriaDao implements IMateriaDao<Materia> {
 
     public MateriaDao() {
         this.configuracaoJDBC = new ConfiguracaoJDBC();
+
     }
 
     @Override
