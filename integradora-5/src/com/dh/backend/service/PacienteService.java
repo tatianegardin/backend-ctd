@@ -21,4 +21,12 @@ public class PacienteService {
     public List<Paciente> findAllPaciente(){
         return pacienteDao.findAll();
     }
+
+    public void deleteById(int id){
+        pacienteDao.deleteById(id);
+    }
+
+    public Paciente findById(int id ){
+        return pacienteDao.findById(id);
+    }
 }

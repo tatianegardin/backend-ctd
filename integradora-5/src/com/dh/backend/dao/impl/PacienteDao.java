@@ -20,12 +20,10 @@ public class PacienteDao implements IPacienteDao<Paciente> {
     @Override
     public Paciente save(Paciente paciente) {
         Connection connection = configuracaoJDBC.conectarComBanco();
-        Statement statement = null;
         String queryPaciente ="INSERT INTO paciente(nome, sobrenome, rg, data, endereco) VALUES(?,?,?,?,?)";
         String queryEndereco ="INSERT INTO endereco(rua, numero, cidade, bairro) VALUES(?,?,?,?)";
        // String query = String.format("INSERT INTO paciente VALUES('%S, %S, %S', %S, %S)", paciente.getNome(), paciente.getSobrenome(), paciente.getRg() );
         try{
-            statement = connection.createStatement();
 
             PreparedStatement SQLInsertEndereco = connection.prepareStatement(queryEndereco, Statement.RETURN_GENERATED_KEYS);
 
@@ -39,14 +37,18 @@ public class PacienteDao implements IPacienteDao<Paciente> {
             while (keys.next()){
                 id = keys.getInt(1);
             }
-            
-            PreparedStatement SQLInsert = connection.prepareStatement(queryPaciente);
+
+            PreparedStatement SQLInsert = connection.prepareStatement(queryPaciente, Statement.RETURN_GENERATED_KEYS);
             SQLInsert.setString(1,paciente.getNome());
             SQLInsert.setString(2,paciente.getSobrenome());
             SQLInsert.setString(3,paciente.getRg());
             SQLInsert.setObject(4,paciente.getData());
             SQLInsert.setInt(5, id );
             SQLInsert.execute();
+            ResultSet key = SQLInsert.getGeneratedKeys();
+            if(key.next()){
+                paciente.setId(key.getInt(1));
+            }
             connection.close();
         }catch (SQLException ex){
             ex.printStackTrace();
@@ -71,5 +73,40 @@ public class PacienteDao implements IPacienteDao<Paciente> {
             ex.printStackTrace();
         }
         return pacienteList;
+    }
+
+    @Override
+    public Paciente findById(int id) {
+        Connection connection = configuracaoJDBC.conectarComBanco();
+        String query = "SELECT * FROM paciente WHERE id = ?";
+        Paciente paciente = null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1,id);
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.getResultSet();
+
+            while (resultSet.next()){
+                paciente = new Paciente(resultSet.getInt("id"), resultSet.getString("nome"));
+            }
+        } catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return paciente;
+    }
+
+    @Override
+    public void deleteById(int id) {
+        Connection connection = configuracaoJDBC.conectarComBanco();
+        String query = "DELETE FROM paciente WHERE id = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1,id);
+            preparedStatement.execute();
+            System.out.println("Deletado com sucesso!");
+
+        } catch (SQLException ex){
+            ex.printStackTrace();
+        }
     }
 }
